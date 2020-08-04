@@ -40,17 +40,17 @@ async function drawBoxes(store, query) {
             var prices = productsRawSub.match(/(?<=<span>à vista R\$).*?(?=<)/sg);
             var images = productsRawSub.match(/(?<=photo\" src=\").*?(?=\")/sg);
 
-            products.push(names.map((name, index) => {
+            products.push(prices.map((price, index) => {
                 $("<a>", { class: "product", "href": urls[index] }).append(
                     $("<img>", { class: "picture", src: images[index] }),
-                    $("<h3>", { class: "name" }).text(name.replace("&quot", "\"")),
-                    $("<h3>", { class: "price" }).text(prices[index].replace(".", ""))
+                    $("<h3>", { class: "name" }).text(names[index].replace("&quot", "\"")),
+                    $("<h3>", { class: "price" }).text(price.replace(".", ""))
                 ).appendTo(`#${store}-column`);
                 return {
-                    name: name,
+                    name: names[index],
                     url: urls[index],
                     image: images[index],
-                    price: prices[index].replace(".", "")
+                    price: price.replace(".", "")
                 }
             }));
             break;
@@ -81,17 +81,17 @@ async function drawBoxes(store, query) {
             var prices = productsRawSub.match(/(?<=R\$ <span>).*?(?=<)/sg);
             var images = productsRawSub.match(/(?<=class=\"lazyload\" data-src=\").*?(?=\")/sg);
 
-            products.push(names.map((name, index) => {
+            products.push(prices.map((price, index) => {
                 $("<a>", { class: "product", "href": `https://${urls[index]}` }).append(
                     $("<img>", { class: "picture", src: images[index] }),
-                    $("<h3>", { class: "name" }).text(name),
-                    $("<h3>", { class: "price" }).text(prices[index].replace(".", ""))
+                    $("<h3>", { class: "name" }).text(names[index]),
+                    $("<h3>", { class: "price" }).text(price.replace(".", ""))
                 ).appendTo(`#${store}-column`);
                 return {
-                    name: name,
+                    name: names[index],
                     url: `https://${urls[index]}`,
                     image: images[index],
-                    price: prices[index].replace(".", "")
+                    price: price.replace(".", "")
                 }
             }));
             break;
