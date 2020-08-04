@@ -37,7 +37,7 @@ async function drawBoxes(store, query) {
             if (p.disponibilidade) {
                 $("<a>", { class: "product", "href": `https://www.kabum.com.br${p.link_descricao}` }).append(
                     $("<img>", { class: "picture", src: p.img }),
-                    $("<h3>", { class: "name" }).text(p.nome),
+                    $("<h3>", { class: "name" }).text(p.nome.length > 100 ? p.nome.substring(0, 95) + "..." : p.nome),
                     $("<h3>", { class: "price" }).text(p.preco_desconto.toFixed(2).replace('.', ','))
                 ).appendTo(`#${store}-column`);
                 return {
@@ -63,7 +63,7 @@ async function drawBoxes(store, query) {
             var productsRawSub = productsRaw["contents"].match(/(?<=lista-produtos-area\">).*?(?=<scrip)/sg)[0];
 
             urls = productsRawSub.match(/(?<=<a href=\"\/\/).*?(?=\" class=)/sg);
-            names = productsRawSub.match(/(?<=product-name\">).*?(?=<)/sg);
+            names = productsRawSub.match(/(?<=product-name\">\s*.{28}).*?(?=[ \r\n\s]*<)/sg);
             prices = productsRawSub.match(/(?<=R\$ <span>).*?(?=<)/sg);
             images = productsRawSub.match(/(?<=class=\"lazyload\" data-src=\").*?(?=\")/sg);
         }
@@ -75,9 +75,13 @@ async function drawBoxes(store, query) {
         }
 
         products.push(prices.map((price, index) => {
+            console.log(names[index].length);
+            console.log(names[index]);
+            names[index] = names[index].replace("&quot", "\"");
+
             $("<a>", { class: "product", "href": `${store == "cissa" ? "https://" + urls[index] : urls[index]}` }).append(
                 $("<img>", { class: "picture", src: images[index] }),
-                $("<h3>", { class: "name" }).text(names[index].replace("&quot", "\"")),
+                $("<h3>", { class: "name" }).text(names[index].length > 100 ? names[index].substring(0,95) + "..." : names[index]),
                 $("<h3>", { class: "price" }).text(price.replace(".", ""))
             ).appendTo(`#${store}-column`);
             return {
