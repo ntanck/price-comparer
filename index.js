@@ -30,71 +30,63 @@ async function drawBoxes(store, query) {
     var productsRaw = await getProducts(store, query);
     var products = [];
 
-    switch (store) {
-        case "pichau":
+    if (store == "kabum") {
+        var tempProducts = JSON.parse(productsRaw.match(/(?<=listagemDados = ).*?(?=const listagemCount)/s));
+
+        products.push(tempProducts.map((p) => {
+            if (p.disponibilidade) {
+                $("<a>", { class: "product", "href": `https://www.kabum.com.br${p.link_descricao}` }).append(
+                    $("<img>", { class: "picture", src: p.img }),
+                    $("<h3>", { class: "name" }).text(p.nome),
+                    $("<h3>", { class: "price" }).text(p.preco_desconto.toFixed(2).replace('.', ','))
+                ).appendTo(`#${store}-column`);
+                return {
+                    name: p.nome,
+                    url: p.link_descricao,
+                    image: p.img,
+                    price: p.preco_desconto.toFixed(2).replace('.', ',')
+                }
+            }
+        }));
+    } else {
+        var urls = names = prices = images = [];
+
+        if(store == "pichau") {
             var productsRawSub = productsRaw["contents"].match(/(?<=products list items product-items).*?(?=Atendimento <strong>Por e-mail)/sg)[0];
             productsRawSub = productsRawSub.replace(/(?<=<span class=\"old-price\">).*?(?=<\/script>)/sg, "")
 
-            var urls = productsRawSub.match(/(?<=\"product-item-link\" href=\").*?(?=\")/sg);
-            var names = productsRawSub.match(/(?<= height=\"\" alt=\").*?(?=\")/sg);
-            var prices = productsRawSub.match(/(?<=<span>à vista R\$).*?(?=<)/sg);
-            var images = productsRawSub.match(/(?<=photo\" src=\").*?(?=\")/sg);
-
-            products.push(prices.map((price, index) => {
-                $("<a>", { class: "product", "href": urls[index] }).append(
-                    $("<img>", { class: "picture", src: images[index] }),
-                    $("<h3>", { class: "name" }).text(names[index].replace("&quot", "\"")),
-                    $("<h3>", { class: "price" }).text(price.replace(".", ""))
-                ).appendTo(`#${store}-column`);
-                return {
-                    name: names[index],
-                    url: urls[index],
-                    image: images[index],
-                    price: price.replace(".", "")
-                }
-            }));
-            break;
-        case "kabum":
-            var tempProducts = JSON.parse(productsRaw.match(/(?<=listagemDados = ).*?(?=const listagemCount)/s));
-
-            products.push(tempProducts.map((p) => {
-                if (p.disponibilidade) {
-                    $("<a>", { class: "product", "href": `https://www.kabum.com.br${p.link_descricao}` }).append(
-                        $("<img>", { class: "picture", src: p.img }),
-                        $("<h3>", { class: "name" }).text(p.nome),
-                        $("<h3>", { class: "price" }).text(p.preco_desconto.toFixed(2).replace('.', ','))
-                    ).appendTo(`#${store}-column`);
-                    return {
-                        name: p.nome,
-                        url: p.link_descricao,
-                        image: p.img,
-                        price: p.preco_desconto.toFixed(2).replace('.', ',')
-                    }
-                }
-            }));
-            break;
-        case "cissa":
+            urls = productsRawSub.match(/(?<=\"product-item-link\" href=\").*?(?=\")/sg);
+            names = productsRawSub.match(/(?<= height=\"\" alt=\").*?(?=\")/sg);
+            prices = productsRawSub.match(/(?<=<span>à vista R\$).*?(?=<)/sg);
+            images = productsRawSub.match(/(?<=photo\" src=\").*?(?=\")/sg);
+        } else {
             var productsRawSub = productsRaw["contents"].match(/(?<=lista-produtos-area\">).*?(?=<scrip)/sg)[0];
 
-            var urls = productsRawSub.match(/(?<=<a href=\"\/\/).*?(?=\" class=)/sg);
-            var names = productsRawSub.match(/(?<=product-name\">).*?(?=<)/sg);
-            var prices = productsRawSub.match(/(?<=R\$ <span>).*?(?=<)/sg);
-            var images = productsRawSub.match(/(?<=class=\"lazyload\" data-src=\").*?(?=\")/sg);
+            urls = productsRawSub.match(/(?<=<a href=\"\/\/).*?(?=\" class=)/sg);
+            names = productsRawSub.match(/(?<=product-name\">).*?(?=<)/sg);
+            prices = productsRawSub.match(/(?<=R\$ <span>).*?(?=<)/sg);
+            images = productsRawSub.match(/(?<=class=\"lazyload\" data-src=\").*?(?=\")/sg);
+        }
+        
+        if (prices == null) {
+            $(`#${store}-column`).append("<h5>Nada por aqui.</h5>")
+            $(`#${store}-column .lds-dual-ring`).remove();
+            return;
+        }
 
-            products.push(prices.map((price, index) => {
-                $("<a>", { class: "product", "href": `https://${urls[index]}` }).append(
-                    $("<img>", { class: "picture", src: images[index] }),
-                    $("<h3>", { class: "name" }).text(names[index]),
-                    $("<h3>", { class: "price" }).text(price.replace(".", ""))
-                ).appendTo(`#${store}-column`);
-                return {
-                    name: names[index],
-                    url: `https://${urls[index]}`,
-                    image: images[index],
-                    price: price.replace(".", "")
-                }
-            }));
-            break;
+        products.push(prices.map((price, index) => {
+            $("<a>", { class: "product", "href": `${store == "cissa" ? "https://" + urls[index] : urls[index]}` }).append(
+                $("<img>", { class: "picture", src: images[index] }),
+                $("<h3>", { class: "name" }).text(names[index].replace("&quot", "\"")),
+                $("<h3>", { class: "price" }).text(price.replace(".", ""))
+            ).appendTo(`#${store}-column`);
+            return {
+                name: names[index],
+                url: `${store == "cissa" ? "https://" + urls[index] : urls[index]}`,
+                image: images[index],
+                price: price.replace(".", "")
+            }
+        }));
     }
     $(`#${store}-column .lds-dual-ring`).remove();
 }
