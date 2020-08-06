@@ -11,7 +11,6 @@ Apenas pesquise pelos termos que busca, listar por "menor preço" não funciona 
 
 ## Known Issues / Problemas Existentes
 
-* Not responsive / Não responsivo
 * Listing by lowest price doesn't work / Listar por menor preço não funciona
 
 ## Anything else? / Mais alguma coisa?

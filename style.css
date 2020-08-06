@@ -63,7 +63,7 @@ main {
     display:block;
     text-decoration: none;
     color: black;
-    height: 6.5vw;
+    height: auto;
     border: 1px solid rgb(247, 247, 247);
 	border-radius: 10px;
 	box-shadow: 2px 2px 3px #141414;
@@ -73,9 +73,14 @@ main {
 }
 
 .product .name, .product .price {
+    font-size: 1vw;
     text-align: left;
-    padding: 0.5vw;
+    padding: 1.2vh;
     margin: 0;
+}
+
+.product .name {
+    padding-bottom: 3vw;
 }
 
 .product .price {
@@ -115,4 +120,37 @@ main {
       transform: rotate(360deg);
     }
 }
-  
+
+@media only screen and (max-width: 600px) {
+    main {
+        flex-direction: column;
+    }
+    
+    .column {
+      overflow-x: scroll;
+      overflow-y: visible;
+      text-align: left;
+    }
+    
+    .product {
+        display: table-cell;
+        position: relative;
+        width: 40vh;
+        margin: 1vh auto;
+    }
+
+    .product .name, .product .price {
+        padding: 1vh;
+        font-size: 2vh;
+    }
+
+    .product .picture {
+        width: 7.5vh;
+    }
+
+    .product .name {
+        width: 30vh;
+        padding-bottom: 3vh;
+    }
+
+}
