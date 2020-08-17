@@ -77,7 +77,6 @@ function cleanUpSpecialChars(str) {
 }
 
 function scrapeStore(store, html){
-    console.log(new RegExp(window.expressions[store].content, "sg"));
     html = html.match(new RegExp(window.expressions[store].content, "sg"))[0];
 
     if(window.expressions[store].toRemove !== null)

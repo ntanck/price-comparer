@@ -10,18 +10,18 @@ header {
 }
 
 header * {
-    margin: 1vh;
+    margin: 9px;
 }
 
 header #queryBox {
     vertical-align: middle;
-    height: 3.3vh;
+    height: 25px;
     width: 40%;
 	border: 1px solid #ccc;
 	border-radius: 10px;
 	box-shadow: 2px 2px 3px #141414;
     font-size: 20px;
-    padding: 1vh;
+    padding: 3px;
 	outline: 0;
 }
 
@@ -81,6 +81,7 @@ main {
 
 .product .name {
     padding-bottom: 3vw;
+    min-height: 2.4vw;
 }
 
 .product .price {
