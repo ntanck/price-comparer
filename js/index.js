@@ -11,6 +11,7 @@ document.getElementById("queryBox").onkeypress = function (event) {
         drawBoxes("pichau", query);
         drawBoxes("kabum", query);
         drawBoxes("cissa", query);
+        drawBoxes("pcxpress", query);
     }
 };
 
@@ -18,14 +19,23 @@ function getProducts(store, query) {
     var lPrice = $("#lowestPrice")[0].checked; //Currently only works for Kabum. Trying to deal with CORS in other stores.
     var storeUrl = {
         "kabum": `https://www.kabum.com.br/cgi-local/site/listagem/listagem.cgi?string=${query}&btnG=&pagina=1&ordem=${lPrice ? "3" : "5"}&limite=2000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]`,
-        "pichau": `https://api.allorigins.win/get?url=https://www.pichau.com.br/catalogsearch/result/?q=${lPrice ? query + "&product_list_order=price" : query}`,
-        "cissa": `https://api.allorigins.win/get?url=https://www.cissamagazine.com.br/busca?q=${lPrice ? query + "&ordem=menorpreco" : query}`
+        "pichau": `https://www.pichau.com.br/catalogsearch/result/?q=${lPrice ? query + "&product_list_order=price" : query}`,
+        "cissa": `https://www.cissamagazine.com.br/busca?q=${lPrice ? query + "&ordem=menorpreco" : query}`,
+        "pcxpress": `https://www.pcxpress.com.br/page/1/?s=${query}&post_type=product`
     };
+    
+    
     return new Promise((resolve, reject) => {
         setTimeout(() => {
-            $.get(storeUrl[store], function (response) {
-                resolve(response);
-            });
+            if(store != "kabum"){
+            $.getJSON(`http://api.allorigins.win/get?url=${encodeURIComponent(storeUrl[store])}&callback=?`, function (data) {
+            resolve(data);
+        });
+    } else {
+        $.get(storeUrl[store], function (response) {
+            resolve(response);
+        });
+    }
         }, 2000);
     });
 }
