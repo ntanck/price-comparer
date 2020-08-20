@@ -21,5 +21,7 @@
         "images":"(?<=height=\".{3}\" src=\").*?(?=\")",
         "prices":"(?<=!important;\"><span class=\"woocommerce-Price-amount amount\"><span class=\"woocommerce-Price-currencySymbol\">&#82;&#36;<\/span>).*?(?=</s)",
         "names":"(?<=\"tituloloja\">).*?(?=<)"
+    },
+    "kabum": {
     }
 }

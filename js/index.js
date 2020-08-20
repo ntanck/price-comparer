@@ -6,12 +6,12 @@ $.getJSON("js/regex.json", function(result){
 document.getElementById("queryBox").onkeypress = function (event) {
     if (event.keyCode == 13 || event.which == 13) {
         var query = cleanUpSpecialChars(event.target.value);
+        var websites = Object.keys(window.expressions);
         $('.p-column').empty();
 
-        drawBoxes("pichau", query);
-        drawBoxes("kabum", query);
-        drawBoxes("cissa", query);
-        drawBoxes("pcxpress", query);
+        websites.forEach(website => {
+            drawBoxes(website, query);
+        });
     }
 };
 
