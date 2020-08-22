@@ -5,10 +5,6 @@ Ferramenta para facilitar a listagem de hardware de certas lojas.
 
 Apenas pesquise pelos termos que busca, listar por "menor preço" não funciona para duas das lojas devido a restrições de CORS.
 
-## Problemas Existentes
-
-* Listar por menor preço não funciona
-
 ## Mais alguma coisa?
 
 Se ver algo que não deveria acontecer, abra uma issue ou entre em contato. Para doações, clique no link abaixo
