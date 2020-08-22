@@ -18,13 +18,12 @@ document.getElementById("queryBox").onkeypress = function (event) {
 function getProducts(store, query) {
     var lPrice = $("#lowestPrice")[0].checked; //Currently only works for Kabum. Trying to deal with CORS in other stores.
     var storeUrl = {
-        "kabum": `https://www.kabum.com.br/cgi-local/site/listagem/listagem.cgi?string=${query}&btnG=&pagina=1&ordem=${lPrice ? "3" : "5"}&limite=2000&prime=false&marcas=[]&tipo_produto=[]&filtro=[]`,
+        "kabum": `https://www.kabum.com.br/cgi-local/site/listagem/listagem.cgi?string=${query}&btnG=&pagina=1&ordem=${lPrice ? "3" : "5"}&limite=2000`,
         "pichau": `https://www.pichau.com.br/catalogsearch/result/?q=${lPrice ? query + "&product_list_order=price" : query}`,
         "cissa": `https://www.cissamagazine.com.br/busca?q=${lPrice ? query + "&ordem=menorpreco" : query}`,
         "pcxpress": `https://www.pcxpress.com.br/page/1/?s=${query}&post_type=product`
     };
-    
-    
+
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             if(store != "kabum"){
@@ -87,7 +86,8 @@ function cleanUpSpecialChars(str) {
 }
 
 function scrapeStore(store, html){
-    html = html.match(new RegExp(window.expressions[store].content, "sg"))[0];
+    try {html = html.match(new RegExp(window.expressions[store].content, "sg"))[0];}
+    catch (err) {return -1;}
 
     if(window.expressions[store].toRemove !== null)
     {
