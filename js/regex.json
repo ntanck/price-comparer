@@ -5,14 +5,16 @@
         "urls":"(?<=\"product-item-link\" href=\").*?(?=\")",
         "images":"(?<=photo\" src=\").*?(?=\")",
         "prices":"(?<=<span>à vista R\\$).*?(?=<)",
-        "names":"(?<= height=\"\" alt=\").*?(?=\")"
+        "names":"(?<= height=\"\" alt=\").*?(?=\")",
+        "pages": "(?<=text-page last\">).*?(?=<)"
     },
     "cissa": {
-        "content":"(?<=lista-produtos-area\">).*?(?=<scrip)",
+        "content":"(?<=lista-produtos-area\">).*?(?=<\/a><\/li><li class=\"nav\"><a title=\"Ir para a próxima página)",
         "urls":"(?<=<a href=\"\/\/).*?(?=\" class=)",
         "images":"(?<=class=\"lazyload\" data-src=\").*?(?=\")",
         "prices":"(?<=R\\$ <span>).*?(?=<)",
-        "names":"(?<=product-name\">\\s*.{28}).*?(?=[ \r\n\\s]*<)"
+        "names":"(?<=product-name\">\\s*.{28}).*?(?=[ \r\n\\s]*<)",
+        "pages":"(?<=p=\\d+\">\\d+).*?(?=<\/a><\/li><li class=\"nav\"><a title=\"Ir para a próxima página)"
     },
     "pcxpress": {
         "content":"(?<=shop-products-inner).*?(?=next page-numbers)",

@@ -15,15 +15,14 @@ document.getElementById("queryBox").onkeypress = function (event) {
     }
 };
 
-function getProducts(store, query) {
+function getProducts(store, query, page) {
     var lPrice = $("#lowestPrice")[0].checked; //Currently only works for Kabum. Trying to deal with CORS in other stores.
     var storeUrl = {
         "kabum": `https://www.kabum.com.br/cgi-local/site/listagem/listagem.cgi?string=${query}&btnG=&pagina=1&ordem=${lPrice ? "3" : "5"}&limite=2000`,
-        "pichau": `https://www.pichau.com.br/catalogsearch/result/?q=${lPrice ? query + "&product_list_order=price" : query}`,
-        "cissa": `https://www.cissamagazine.com.br/busca?q=${lPrice ? query + "&ordem=menorpreco" : query}`,
-        "pcxpress": `https://www.pcxpress.com.br/page/1/?s=${query}&post_type=product`
+        "pichau": `https://www.pichau.com.br/catalogsearch/result/index/?p=${page}&q=${query}${lPrice ? "&product_list_order=price" : ""}&product_list_limit=48`,
+        "cissa": `https://www.cissamagazine.com.br/busca?q=${lPrice ? query + "&ordem=menorpreco" : query}&p=${page}`,
+        "pcxpress": `https://www.pcxpress.com.br/page/1/?${lPrice ? "orderby=price&" : ""}s=${query}&post_type=product`
     };
-
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             if(store != "kabum"){
@@ -41,10 +40,10 @@ function getProducts(store, query) {
 
 async function drawBoxes(store, query) {
     $("<div>", { class: "lds-dual-ring" }).appendTo(`#${store}-column`);
-    var productsRaw = await getProducts(store, query);
-    var products = [];
-
     if (store == "kabum") {
+        var productsRaw = await getProducts(store, query);
+        var products = [];
+
         var tempProducts = JSON.parse(productsRaw.match(/(?<=listagemDados = ).*?(?=const listagemCount)/s));
 
         products.push(tempProducts.map((p) => {
@@ -63,12 +62,25 @@ async function drawBoxes(store, query) {
             }
         }));
     } else {
-        var status = scrapeStore(store, productsRaw["contents"]);
-        
-        if (status == -1) {
-            $(`#${store}-column`).append("<h5>Nada por aqui.</h5>")
-            $(`#${store}-column .lds-dual-ring`).remove();
-            return;
+        var i;
+        var pages = 1;
+        for(i = 1; i <= pages; i++)
+        {
+            var productsRaw = await getProducts(store, query, i);
+            var status = scrapeStore(store, productsRaw["contents"]);
+            
+            if (status == -1) {
+                if(pages == 1){
+                    $(`#${store}-column`).append("<h5>Nada por aqui.</h5>")
+                    $(`#${store}-column .lds-dual-ring`).remove();
+                }
+                break;
+            }
+
+            if(pages == 1){
+                pages = productsRaw["contents"].match(new RegExp(window.expressions[store].pages, "s"));
+            }
+
         }
     }
     $(`#${store}-column .lds-dual-ring`).remove();
@@ -93,7 +105,6 @@ function scrapeStore(store, html){
     {
         html = html.replace(new RegExp(window.expressions[store].toRemove, "sg"),"")
     }
-
     var products = [];
 
     var urls = html.match(new RegExp(window.expressions[store].urls, "sg"));
