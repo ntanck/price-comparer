@@ -21,7 +21,7 @@ function getProducts(store, query, page) {
         "kabum": `https://www.kabum.com.br/cgi-local/site/listagem/listagem.cgi?string=${query}&btnG=&pagina=1&ordem=${lPrice ? "3" : "5"}&limite=2000`,
         "pichau": `https://www.pichau.com.br/catalogsearch/result/index/?p=${page}&q=${query}${lPrice ? "&product_list_order=price" : ""}&product_list_limit=48`,
         "cissa": `https://www.cissamagazine.com.br/busca?q=${lPrice ? query + "&ordem=menorpreco" : query}&p=${page}`,
-        "pcxpress": `https://www.pcxpress.com.br/page/1/?${lPrice ? "orderby=price&" : ""}s=${query}&post_type=product`
+        "pcxpress": `https://www.pcxpress.com.br/page/${page}/?${lPrice ? "orderby=price&" : ""}s=${query}&post_type=product`
     };
     return new Promise((resolve, reject) => {
         setTimeout(() => {
@@ -62,25 +62,25 @@ async function drawBoxes(store, query) {
             }
         }));
     } else {
-        var i;
-        var pages = 1;
-        for(i = 1; i <= pages; i++)
-        {
+        var i = 1;
+        while(true) {
             var productsRaw = await getProducts(store, query, i);
             var status = scrapeStore(store, productsRaw["contents"]);
             
             if (status == -1) {
-                if(pages == 1){
+                if(i == 1){
                     $(`#${store}-column`).append("<h5>Nada por aqui.</h5>")
                     $(`#${store}-column .lds-dual-ring`).remove();
                 }
                 break;
             }
 
-            if(pages == 1){
-                pages = productsRaw["contents"].match(new RegExp(window.expressions[store].pages, "s"));
-            }
+            if(store == "cissa" || store == "pichau") {console.log(productsRaw["contents"]);}
 
+            i = productsRaw["contents"].match(new RegExp(window.expressions[store].pages, "s"));
+            console.log(i);
+
+            if(i == undefined) {break;}
         }
     }
     $(`#${store}-column .lds-dual-ring`).remove();
