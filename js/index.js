@@ -26,7 +26,7 @@ function getProducts(store, query, page) {
     return new Promise((resolve, reject) => {
         setTimeout(() => {
             if(store != "kabum"){
-            $.getJSON(`http://api.allorigins.win/get?url=${encodeURIComponent(storeUrl[store])}&callback=?`, function (data) {
+            $.getJSON(`https://api.allorigins.win/get?url=${encodeURIComponent(storeUrl[store])}&callback=?`, function (data) {
             resolve(data);
         });
     } else {
