@@ -75,10 +75,7 @@ async function drawBoxes(store, query) {
                 break;
             }
 
-            if(store == "cissa" || store == "pichau") {console.log(productsRaw["contents"]);}
-
             i = productsRaw["contents"].match(new RegExp(window.expressions[store].pages, "s"));
-            console.log(i);
 
             if(i == undefined) {break;}
         }
