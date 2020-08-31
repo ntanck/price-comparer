@@ -1,4 +1,4 @@
-# [Comparador de preço](http://gfrancisco.info/price-comparer/index.html)
+# [Comparador de preço](https://gfrancisco.info/price-comparer/index.html)
 Ferramenta para facilitar a listagem de hardware de certas lojas.
 
 ## Utilização
