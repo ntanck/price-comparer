@@ -25,6 +25,16 @@ header #queryBox {
 	outline: 0;
 }
 
+.p-title {
+    position: relative;
+    font-size: 1vw;
+    width: 100%;
+}
+
+.p-title h1 {
+    display: inline;
+}
+
 header #lowestPrice {
     margin-right:0;
 }
@@ -96,16 +106,18 @@ main {
 }
 
 .lds-dual-ring {
+    position: absolute;
+    left: 1vw;
     display: inline-block;
-    width: 80px;
-    height: 80px;
+    width: 1vw;
+    height: 1vw;
 }
 
 .lds-dual-ring:after {
     content: " ";
     display: block;
-    width: 64px;
-    height: 64px;
+    width: 1vw;
+    height: 1vw;
     margin: 8px;
     border-radius: 50%;
     border: 6px solid #1d6cff;

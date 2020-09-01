@@ -39,7 +39,7 @@ function getProducts(store, query, page) {
 }
 
 async function drawBoxes(store, query) {
-    $("<div>", { class: "lds-dual-ring" }).appendTo(`#${store}-column`);
+    $("<div>", { class: "lds-dual-ring" }).appendTo(`#${store}-title`);
     if (store == "kabum") {
         var productsRaw = await getProducts(store, query);
         var products = [];
@@ -80,7 +80,7 @@ async function drawBoxes(store, query) {
             if(i == undefined) {break;}
         }
     }
-    $(`#${store}-column .lds-dual-ring`).remove();
+    $(`#${store}-title .lds-dual-ring`).remove();
 }
 
 function cleanUpSpecialChars(str) {
