@@ -3,7 +3,7 @@ Ferramenta para facilitar a listagem de hardware de certas lojas.
 
 ## Utilização
 
-Apenas pesquise pelos termos que busca, listar por "menor preço" não funciona para duas das lojas devido a restrições de CORS.
+Apenas pesquise pelos termos que busca
 
 ## Mais alguma coisa?
 
