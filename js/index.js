@@ -44,7 +44,7 @@ async function drawBoxes(store, query) {
         var productsRaw = await getProducts(store, query);
         var products = [];
 
-        var tempProducts = JSON.parse(productsRaw.match(/(?<=listagemDados = ).*?(?=const listagemCount)/s));
+        var tempProducts = JSON.parse(productsRaw.match(/(?<=listagemDados = ).*?(?=const listagem)/s));
 
         products.push(tempProducts.map((p) => {
             if (p.disponibilidade) {
