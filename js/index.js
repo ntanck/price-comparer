@@ -39,28 +39,26 @@ function getProducts(store, query, page) {
 }
 
 async function drawBoxes(store, query) {
-    $("<div>", { class: "lds-dual-ring" }).appendTo(`#${store}-title`);
+    $(`#${store}-title .lds-dual-ring`).show();
     if (store == "kabum") {
         var productsRaw = await getProducts(store, query);
-        var products = [];
 
-        var tempProducts = JSON.parse(productsRaw.match(/(?<=listagemDados = ).*?(?=const listagem)/s));
+        var products = JSON.parse(productsRaw.match(/(?<=listagemDados = ).*?(?=const listagem)/s));
 
-        products.push(tempProducts.map((p) => {
+        if(products < 1) {
+            $(`#${store}-column`).append("<h5>Nada por aqui.</h5>")
+            $(`#${store}-column .lds-dual-ring`).hide
+        }
+
+        for (p of products) {
             if (p.disponibilidade) {
                 $("<a>", { class: "product", "href": `https://www.kabum.com.br${p.link_descricao}` }).append(
                     $("<img>", { class: "picture", src: p.img }),
                     $("<h3>", { class: "name" }).text(p.nome.length > 100 ? p.nome.substring(0, 95) + "..." : p.nome),
                     $("<h3>", { class: "price" }).text(p.preco_desconto.toFixed(2).replace('.', ','))
                 ).appendTo(`#${store}-column`);
-                return {
-                    name: p.nome,
-                    url: p.link_descricao,
-                    image: p.img,
-                    price: p.preco_desconto.toFixed(2).replace('.', ',')
-                }
             }
-        }));
+        }
     } else {
         var i = 1;
         while(true) {
@@ -70,7 +68,7 @@ async function drawBoxes(store, query) {
             if (status == -1) {
                 if(i == 1){
                     $(`#${store}-column`).append("<h5>Nada por aqui.</h5>")
-                    $(`#${store}-column .lds-dual-ring`).remove();
+                    $(`#${store}-column .lds-dual-ring`).hide
                 }
                 break;
             }
@@ -80,7 +78,7 @@ async function drawBoxes(store, query) {
             if(i == undefined) {break;}
         }
     }
-    $(`#${store}-title .lds-dual-ring`).remove();
+    $(`#${store}-title .lds-dual-ring`).hide();
 }
 
 function cleanUpSpecialChars(str) {
@@ -96,31 +94,33 @@ function cleanUpSpecialChars(str) {
 
 function scrapeStore(store, html){
     try {html = html.match(new RegExp(window.expressions[store].content, "sg"))[0];}
-    catch (err) {return -1;}
+    catch (err) {return;}
 
     if(window.expressions[store].toRemove !== null)
     {
         html = html.replace(new RegExp(window.expressions[store].toRemove, "sg"),"")
     }
-    var products = [];
 
     var urls = html.match(new RegExp(window.expressions[store].urls, "sg"));
     var names = html.match(new RegExp(window.expressions[store].names, "sg"));
     var prices = html.match(new RegExp(window.expressions[store].prices, "sg"));
     var images = html.match(new RegExp(window.expressions[store].images, "sg"));
 
+    // I could build an array of objects based on these original arrays, but that would mean more processing for
+    // no valid reason
+
     if(prices == null){
-        return -1;
+        return;
     }
     
-    products.push(prices.map((price, index) => {
+    for (index in prices) {
         names[index] = names[index].replace("&quot", "\"");
         $("<a>", { class: "product", "href": urls[index]}).append(
-            $("<img>", { class: "picture", src: images[index] }),
-            $("<h3>", { class: "name" }).text(names[index].length > 100 ? names[index].substring(0,95) + "..." : names[index]),
-            $("<h3>", { class: "price" }).text(price.replace(".", ""))
+        $("<img>", { class: "picture", src: images[index] }),
+        $("<h3>", { class: "name" }).text(names[index].length > 100 ? names[index].substring(0,95) + "..." : names[index]),
+        $("<h3>", { class: "price" }).text(prices[index].replace(".", ""))
         ).appendTo(`#${store}-column`);
-    }));
+    };
 }
 
 

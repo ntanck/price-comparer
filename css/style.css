@@ -108,7 +108,7 @@ main {
 .lds-dual-ring {
     position: absolute;
     left: 1vw;
-    display: inline-block;
+    display: none;
     width: 1vw;
     height: 1vw;
 }
