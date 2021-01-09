@@ -1,0 +1,21 @@
+{
+    "name": "scraper-front",
+    "version": "1.0.0",
+    "description": "Hardware price scraper frontend",
+    "main": "index.js",
+    "scripts": {
+        "dev": "webpack --mode development",
+        "build": "webpack --mode production"
+    },
+    "author": "Guilherme F. de Freitas",
+    "license": "ISC",
+    "dependencies": {
+        "jquery": "^3.5.1"
+    },
+    "devDependencies": {
+        "css-loader": "^4.3.0",
+        "style-loader": "^1.3.0",
+        "webpack": "^4.44.2",
+        "webpack-cli": "^3.3.12"
+    }
+}
