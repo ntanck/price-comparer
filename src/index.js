@@ -18,13 +18,11 @@ document.getElementById("queryBox").onkeypress = function (event) {
 async function drawBoxes(store, query) {
     $(`#${store}-title .lds-dual-ring`).show();
     
-    console.log("AAAA");
     $.ajax({
         url: `https://hardware-scraper-api.herokuapp.com/get?store=${store}&query=${query}`,
     })
         .done(function (products) {
             for (const p of products) {
-                console.log(p);
                 $("<a>", { class: "product", "href": p.url }).append(
                     $("<img>", { class: "picture", src: p.img }),
                     $("<h3>", { class: "name" }).text(p.name),
@@ -37,8 +35,8 @@ async function drawBoxes(store, query) {
 
 function cleanUpSpecialChars(str) {
     return str.toLowerCase()
-        .replace(/[&#039]/g, "'")
-        .replace(/[&quot;]/g, "\"")
+        .replace(/[àáâãäå]/g, "a")
+        .replace(/[èééêë]/g, "e")
         .replace(/[óòôõö]/g, "o")
         .replace(/[íìï]/g, "i")
         .replace(/[úùü]/g, "u")
